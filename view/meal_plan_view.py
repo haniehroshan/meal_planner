@@ -249,8 +249,8 @@ class MealPlanView:
                 patient_id=self.patient.id,
                 plan_id=self.plan_id,
                 meal=meal,
-                foods=selected_food,  # Pass the food name
-                quantity=quantity  # Pass the quantity for update
+                foods=selected_food,  # the food name
+                quantity=quantity
             )
 
             if status:
