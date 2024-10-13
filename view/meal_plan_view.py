@@ -175,7 +175,7 @@ class MealPlanView:
                                         f"Fat left: {fat_left:.2f}")
 
                     # Step 2: Prepare to save meal plan into MySQL
-                    # # Format the foods string correctly
+                    # # Format the foods string
                     # formatted_foods = [f"{food} ({quantity}g)" for food in self.all_meals.get(meal, [])]
 
                     # Step 3: Insert into MySQL table without quantity as a parameter
