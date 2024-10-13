@@ -1,6 +1,6 @@
-# from model.validator.validation import Validation
+from model.validator.validation import Validation
 class User:
-    def __init__(self, id, name, family, mobile, password, active=True):
+    def __init__(self, id, name, family, mobile, password):
         self.id = id
         self.name = name
         self.family = family
@@ -22,8 +22,9 @@ class User:
 
     @name.setter
     def name(self, name):
-        # self._name = Validation.name_validator(name)
-        self._name = name
+        # self._name = name
+        self._name = Validation.name_validator(name)
+
 
     @property
     def family(self):
@@ -31,8 +32,9 @@ class User:
 
     @family.setter
     def family(self, family):
-        # self._family = Validation.family_validator(family)
-        self._family = family
+        # self._family = family
+        self._family = Validation.family_validator(family)
+
 
     @property
     def mobile(self):
@@ -40,8 +42,9 @@ class User:
 
     @mobile.setter
     def mobile(self, mobile):
-        # self._mobile = Validation.mobile_validator(mobile)
-        self._mobile = mobile
+        # self._mobile = mobile
+        self._mobile = Validation.mobile_validator(mobile)
+
 
     @property
     def password(self):
@@ -49,8 +52,9 @@ class User:
 
     @password.setter
     def password(self, password):
-        # self._password = Validation.password_validator(password)
-        self._password = password
+        # self._password = password
+        self._password = Validation.password_validator(password)
+
 
 
     def __repr__(self):

@@ -41,7 +41,11 @@ class UserController:
     @classmethod
     def find_by_mobile(cls, mobile):
         try:
-            return True, cls.user_da.find_by_mobile(mobile)
+            user = cls.user_da.find_by_mobile(mobile)
+            if user:
+                return True, user
+            else:
+                raise UserNotFoundException("User not found !!!")
         except Exception as e:
             return False, str(e)
 

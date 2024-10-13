@@ -20,7 +20,8 @@ class UserDa:
 
     def save(self, name, family, mobile, password):
         self.connect()
-        self.cursor.execute('INSERT INTO user_table (name, family, mobile, password) VALUES (%s, %s, %s, %s)', (name, family,mobile, password))
+        self.cursor.execute('INSERT INTO user_table (name, family, mobile, password)'
+                            ' VALUES (%s, %s, %s, %s)', (name, family, mobile, password))
         self.disconnect(True)
 
     def edit(self, id, name, family, mobile, password):
@@ -32,9 +33,9 @@ class UserDa:
         self.connection.commit()
         self.disconnect(True)
 
-    def remove(self, mobile):
+    def remove(self, id):
         self.connect()
-        self.cursor.execute('DELETE FROM user_table WHERE mobile=%s', [mobile])
+        self.cursor.execute('DELETE FROM user_table WHERE id=%s', [id])
         self.disconnect(True)
 
     def find_all(self):
@@ -72,3 +73,10 @@ class UserDa:
         self.disconnect()
         return user
 
+    def find_by_id(self, id):
+        self.connect()
+        self.cursor.execute('SELECT * FROM user_table WHERE id=%s', [id])
+        user_tuple = self.cursor.fetchone()
+        user = User(*user_tuple)
+        self.disconnect()
+        return user

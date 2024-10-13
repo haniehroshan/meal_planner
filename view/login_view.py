@@ -19,8 +19,8 @@ class LoginView:
         img = ImageTk.PhotoImage(img)
         Label(self.window, image=img).place(x=78, y=20)
 
-        self.mobile = EntryWithLabel(self.window, "Mobile", 20, 170)
-        self.password = EntryWithLabel(self.window, "Password", 20, 210)
+        self.mobile = EntryWithLabel(self.window, "Mobile", 20, 170, width=20)
+        self.password = EntryWithLabel(self.window, "Password", 20, 210, width=20)
 
         Button(self.window, text="Login", width=8, command=self.login_click).place(x=100, y=270)
         Button(self.window, text="Signup", width=8, command=self.signup_click).place(x=190, y=270)
@@ -33,7 +33,7 @@ class LoginView:
         if status:
             self.window.destroy()
             from view.patientvisit_view import PatientVisitView
-            patient_visit_view = PatientVisitView()
+            patient_visit_view = PatientVisitView(user)
             # todo
         else:
             msg.showerror("Login", "Access Denied !!!")

@@ -9,10 +9,10 @@ class UserView:
         self.window = Tk()
         self.window.title("Sign up")
         self.window.geometry("400x500")
-        self.name = EntryWithLabel(self.window,"Name", 20, 20)
-        self.family = EntryWithLabel(self.window,"Family", 20, 60)
-        self.mobile = EntryWithLabel(self.window,"Mobile", 20, 100)
-        self.password = EntryWithLabel(self.window,"Password", 20, 140)
+        self.name = EntryWithLabel(self.window,"Name", 20, 20, width=20)
+        self.family = EntryWithLabel(self.window,"Family", 20, 60, width=20)
+        self.mobile = EntryWithLabel(self.window,"Mobile", 20, 100, width=20)
+        self.password = EntryWithLabel(self.window,"Password", 20, 140, width=20)
         # todo:
 
 
