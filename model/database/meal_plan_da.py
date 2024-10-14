@@ -20,7 +20,7 @@ class MealPlanDa:
     def insert_data(self, meal_plan):
         self.connect()
         # Convert the list of foods to a string
-        foods_str = ', '.join(meal_plan.foods)
+        # foods_str = ', '.join(meal_plan.foods)
         self.cursor.execute(
             'INSERT INTO meal_plan_tbl (patient_id, date, plan_info, calorie_needed,'
             ' carbohydrate_percentage, protein_percentage, fat_percentage,'
@@ -29,7 +29,7 @@ class MealPlanDa:
             (meal_plan.patient_id, meal_plan.date, meal_plan.plan_info, meal_plan.calorie_needed,
              meal_plan.carbohydrate_percentage, meal_plan.protein_percentage, meal_plan.fat_percentage,
              meal_plan.carbohydrate_needed, meal_plan.protein_needed, meal_plan.fat_needed,
-             meal_plan.meal, foods_str, meal_plan.quantity)
+             meal_plan.meal, meal_plan.foods, meal_plan.quantity)
         )
         self.disconnect(True)
 

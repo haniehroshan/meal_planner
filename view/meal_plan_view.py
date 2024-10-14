@@ -111,9 +111,24 @@ class MealPlanView:
         # Step 1: Get the selected food, meal, and quantity
         selected_food = self.food_combobox.get()
         meal = self.meal_combobox.get()
-        quantity = self.quantity.get()
 
-        if selected_food and meal and quantity:
+        # Step 2: Ensure quantity is retrieved as a string
+        quantity_str = str(self.quantity.get())  # Ensure quantity is a string
+
+        # Strip non-numeric characters from quantity
+        quantity_numeric = ''.join(filter(str.isdigit, quantity_str))  # Keep only digits
+
+        if not quantity_numeric:
+            messagebox.showwarning("Input Error", "Please enter a valid quantity.")
+            return  # Exit if quantity is empty or invalid
+        quantity = float(quantity_numeric)  # Convert to float after stripping
+
+        # Check if percentage entries are filled
+        if not self.carbohydrate_percentage.get() or not self.protein_percentage.get() or not self.fat_percentage.get():
+            messagebox.showwarning("Input Error", "Please fill in all percentage entries (Carbs, Protein, Fat).")
+            return  # Exit the method if percentages are not filled
+
+        if selected_food and meal:
             # Create an object from NutritionCalculator
             calculator = NutritionCalculator(
                 self.patient,
@@ -152,9 +167,6 @@ class MealPlanView:
                 # Check if adding the food exceeds the needs
                 if calorie_left >= 0 and carbohydrate_left >= 0 and protein_left >= 0 and fat_left >= 0:
                     # Add food to the all_meals dictionary with quantity
-                    # if meal not in self.all_meals:
-                    #     self.all_meals[meal] = []
-                    # self.all_meals[meal].append(f"{selected_food} ({quantity}g)")
                     if meal not in self.all_meals:
                         self.all_meals[meal] = []
                     self.all_meals[meal].append((selected_food, quantity))
@@ -174,26 +186,7 @@ class MealPlanView:
                                         f"Protein left: {protein_left:.2f}\n"
                                         f"Fat left: {fat_left:.2f}")
 
-                    # Step 2:
-                    # # Format the foods string
-                    # formatted_foods = [f"{food} ({quantity}g)" for food in self.all_meals.get(meal, [])]
-
-                    # Step 3: Insert into MySQL table without quantity as a parameter
-                    # status, message = MealPlanController.insert_data(
-                    #     patient_id=self.patient.id,
-                    #     plan_info=self.plan_info.get(),
-                    #     calorie_needed=self.calorie_needed,
-                    #     carbohydrate_percentage=float(self.carbohydrate_percentage.get()) / 100,
-                    #     protein_percentage=float(self.protein_percentage.get()) / 100,
-                    #     fat_percentage=float(self.fat_percentage.get()) / 100,
-                    #     carbohydrate_needed=self.carbohydrate_needed,
-                    #     protein_needed=self.protein_needed,
-                    #     fat_needed=self.fat_needed,
-                    #     meal=meal,
-                    #     foods=
-                    #
-                    #     # foods=formatted_foods
-                    # )
+                    # Step 2: Insert into MySQL table without quantity as a parameter
                     status, message = MealPlanController.insert_data(
                         patient_id=self.patient.id,
                         plan_info=self.plan_info.get(),
@@ -239,42 +232,45 @@ class MealPlanView:
         else:
             messagebox.showwarning("Input Error", "Please select a food, meal, and quantity.")
 
+        # Bind the selection event to the TreeView
+        self.tree.bind("<<TreeviewSelect>>", self.on_treeview_select)
+
+    def on_treeview_select(self, event):
+        selected_item = self.tree.selection()  # Get selected item
+        if selected_item:  # Ensure an item is selected
+            values = self.tree.item(selected_item[0], 'values')  # Get current values from TreeView
+            self.meal_combobox.set(values[0])  # Set the meal field
+            self.food_combobox.set(values[1])  # Set the food field
+            self.quantity.set(values[2])  # Set the quantity field
+
     def edit_meal(self):
-        try:
-            # Get selected row from the TreeView
-            selected_item = self.tree.selection()[0]  # Get the selected row
-            values = self.tree.item(selected_item, 'values')  # Get current values from the TreeView
+        # Get selected row from the TreeView
+        selected_item = self.tree.selection()
+        if selected_item:  # Ensure an item is selected
+            values = self.tree.item(selected_item[0], 'values')  # Get current values from TreeView
 
-            # Fetch the current values from the selected row
-            meal = values[0]  #  Meal is the first column
-            selected_food = values[1]  # Food is the second column
-            quantity = values[2]  #  Quantity is the third column
+            # Fetch values from the selected row
+            meal = values[0]  # Meal type
+            selected_food = values[1]  # Food name
+            quantity = values[2]  # Quantity
 
-            # Get updated values from the user input
-            new_meal = self.meal_combobox.get()
-            new_food = self.food_combobox.get()
-            new_quantity = self.quantity.get()
-
-            if new_meal and new_food and new_quantity:
-                # Call the controller's edit method to update the record in the database
+            if meal and selected_food and quantity:
+                # Edit meal in the database
                 status, message = MealPlanController.edit(
                     patient_id=self.patient.id,
                     plan_id=self.plan_id,
-                    meal=new_meal,
-                    foods=new_food,
-                    quantity=new_quantity
+                    meal=meal,
+                    foods=selected_food,
+                    quantity=quantity
                 )
 
                 if status:
-                    # Update the TreeView with the new values
-                    self.tree.item(selected_item, values=(new_meal, new_food, f"{new_quantity}g"))
                     messagebox.showinfo("Edit Meal", "Meal plan updated successfully.")
+                    self.refresh_table()
                 else:
                     messagebox.showerror("Edit Error", f"Failed to edit meal: {message}")
             else:
-                messagebox.showwarning("Warning", "Please fill in all fields.")
-        except IndexError:
-            messagebox.showerror("Error", "No meal selected for editing.")
+                messagebox.showwarning("Warning", "Please select a meal and food to edit.")
 
     def remove_meal(self):
         try:
