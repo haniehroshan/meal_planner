@@ -12,7 +12,7 @@ class NutritionCalculator:
             TEE = BEE * 1.3 * 1.1
             restricted_TEE = TEE - 500
             return restricted_TEE
-        else:
+        elif self.patient.gender == 'female':
             BEE = (10 * self.patient.weight) + (6.25 * self.patient.height)-(5 * self.patient.age)-161
             TEE = BEE * 1.3 * 1.1
             restricted_TEE = TEE - 500

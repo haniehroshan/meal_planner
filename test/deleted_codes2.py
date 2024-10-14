@@ -332,3 +332,13 @@ def save_meal(self):
             messagebox.showerror("Error", "Could not fetch nutritional values for the selected food.")
     else:
         messagebox.showwarning("Input Error", "Please fill in all the fields.")
+
+
+
+
+
+
+
+self.bmi_var = StringVar()
+        Label(self.window, font=("Arial Black", 14), textvariable=self.bmi_var).place(x=20, y=210)
+        self.bmi_var.set(f"BMI : {(self.weight.get() * 10000)/self.height.get()}")

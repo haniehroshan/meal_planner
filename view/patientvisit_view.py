@@ -24,8 +24,6 @@ class PatientVisitView:
         Radiobutton(self.window, text="Male", variable=self.gender, value="Male").place(x=100, y=180)
         self.gender.set("Female")
 
-        Label(self.window, text="BMI").place(x=20, y=210)
-
 
         Button(self.window, text="Save", width=7, command= self.save_click).place(x=20, y=300)
         Button(self.window, text="Remove", width=7, command= self.remove_click).place(x=100, y=300)
@@ -36,7 +34,6 @@ class PatientVisitView:
         
         self.window.mainloop()
 
-        # todo: def save_click, ...
 
     def save_click(self):
         status, message = PatientController.save(self.weight.get(),
