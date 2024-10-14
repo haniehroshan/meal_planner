@@ -47,6 +47,8 @@ class MealPlanDa:
             )
         '''
         self.cursor.execute(query, (foods, quantity, patient_id, plan_id, meal, patient_id, plan_id, meal))
+
+        self.cursor.execute(query, (foods, quantity, patient_id, plan_id, meal, patient_id, plan_id, meal))
         self.disconnect(True)
 
     def remove(self, patient_id, plan_id, meal):
