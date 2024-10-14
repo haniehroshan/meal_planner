@@ -37,35 +37,20 @@ class MealPlanDa:
         self.connect()
         query = '''
             UPDATE meal_plan_tbl
-            SET foods = %s, quantity = %s
-            WHERE patient_id = %s AND plan_id = %s AND meal = %s
-            AND date = (
-                SELECT date FROM meal_plan_tbl
-                WHERE patient_id = %s AND plan_id = %s AND meal = %s
-                ORDER BY date DESC
-                LIMIT 1
-            )
+            SET foods = %s, quantity = %s AND meal
+            WHERE patient_id = %s AND plan_id = %s 
         '''
-        self.cursor.execute(query, (foods, quantity, patient_id, plan_id, meal, patient_id, plan_id, meal))
-
-        self.cursor.execute(query, (foods, quantity, patient_id, plan_id, meal, patient_id, plan_id, meal))
+        self.cursor.execute(query, (foods, quantity, meal, patient_id, plan_id))
         self.disconnect(True)
 
-    def remove(self, patient_id, plan_id, meal):
+    def remove(self, patient_id, plan_id, meal, foods):
         self.connect()
         query = '''
             DELETE FROM meal_plan_tbl
-            WHERE patient_id = %s AND plan_id = %s AND meal = %s
-            AND date = (
-                SELECT date FROM meal_plan_tbl
-                WHERE patient_id = %s AND plan_id = %s AND meal = %s
-                ORDER BY date DESC
-                LIMIT 1
-            )
+            WHERE patient_id = %s AND plan_id = %s AND meal = %s AND foods = %s
         '''
-        self.cursor.execute(query, (patient_id, plan_id, meal, patient_id, plan_id, meal))
+        self.cursor.execute(query, (patient_id, plan_id, meal, foods))
         self.disconnect(True)
-
 
     def get_all_meal_plans(self, patient_id):
         self.connect()

@@ -10,7 +10,7 @@ class MealPlanController:
                     protein_percentage, fat_percentage, carbohydrate_needed,
                     protein_needed, fat_needed, meal, foods, quantity):
         try:
-            # Create a MealPlan object (note that date is not needed here as it's auto-generated)
+            # Create a MealPlan object (date is not needed here as it's auto-generated)
             meal_plan = MealPlan(patient_id=patient_id, plan_info=plan_info, plan_id=None,
                                  calorie_needed=calorie_needed, carbohydrate_percentage=carbohydrate_percentage,
                                  protein_percentage=protein_percentage, fat_percentage=fat_percentage,
@@ -39,10 +39,10 @@ class MealPlanController:
             return False, str(e)
 
     @classmethod
-    def remove(cls, patient_id, plan_id, meal):
+    def remove(cls, patient_id, plan_id, meal, foods):
         try:
             # Delete the meal plan from the database
-            cls.meal_plan_da.remove(patient_id=patient_id, plan_id=plan_id, meal=meal)
+            cls.meal_plan_da.remove(patient_id=patient_id, plan_id=plan_id, meal=meal, foods=foods)
             return True, "Meal plan removed."
         except Exception as e:
             return False, str(e)

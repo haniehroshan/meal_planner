@@ -174,7 +174,7 @@ class MealPlanView:
                                         f"Protein left: {protein_left:.2f}\n"
                                         f"Fat left: {fat_left:.2f}")
 
-                    # Step 2: Prepare to save meal plan into MySQL
+                    # Step 2:
                     # # Format the foods string
                     # formatted_foods = [f"{food} ({quantity}g)" for food in self.all_meals.get(meal, [])]
 
