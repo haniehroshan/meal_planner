@@ -37,7 +37,7 @@ class MealPlanDa:
         self.connect()
         query = '''
             UPDATE meal_plan_tbl
-            SET foods = %s, quantity = %s AND meal
+            SET foods = %s, quantity = %s, meal = %s
             WHERE patient_id = %s AND plan_id = %s 
         '''
         self.cursor.execute(query, (foods, quantity, meal, patient_id, plan_id))
