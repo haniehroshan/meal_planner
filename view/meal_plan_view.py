@@ -240,45 +240,68 @@ class MealPlanView:
             messagebox.showwarning("Input Error", "Please select a food, meal, and quantity.")
 
     def edit_meal(self):
-        meal = self.meal_combobox.get()
-        selected_food = self.food_combobox.get()
-        quantity = self.quantity.get()
+        try:
+            # Get selected row from the TreeView
+            selected_item = self.tree.selection()[0]  # Get the selected row
+            values = self.tree.item(selected_item, 'values')  # Get current values from the TreeView
 
-        if meal and selected_food and quantity:
-            status, message = MealPlanController.edit(
-                patient_id=self.patient.id,
-                plan_id=self.plan_id,
-                meal=meal,
-                foods=selected_food,  # the food name
-                quantity=quantity
-            )
+            # Fetch the current values from the selected row
+            meal = values[0]  #  Meal is the first column
+            selected_food = values[1]  # Food is the second column
+            quantity = values[2]  #  Quantity is the third column
 
-            if status:
-                messagebox.showinfo("Edit Meal", "Meal plan updated successfully.")
-                self.refresh_table()
+            # Get updated values from the user input
+            new_meal = self.meal_combobox.get()
+            new_food = self.food_combobox.get()
+            new_quantity = self.quantity.get()
+
+            if new_meal and new_food and new_quantity:
+                # Call the controller's edit method to update the record in the database
+                status, message = MealPlanController.edit(
+                    patient_id=self.patient.id,
+                    plan_id=self.plan_id,
+                    meal=new_meal,
+                    foods=new_food,
+                    quantity=new_quantity
+                )
+
+                if status:
+                    # Update the TreeView with the new values
+                    self.tree.item(selected_item, values=(new_meal, new_food, f"{new_quantity}g"))
+                    messagebox.showinfo("Edit Meal", "Meal plan updated successfully.")
+                else:
+                    messagebox.showerror("Edit Error", f"Failed to edit meal: {message}")
             else:
-                messagebox.showerror("Edit Error", f"Failed to edit meal: {message}")
-        else:
-            messagebox.showwarning("Warning", "Please fill in all fields.")
+                messagebox.showwarning("Warning", "Please fill in all fields.")
+        except IndexError:
+            messagebox.showerror("Error", "No meal selected for editing.")
 
     def remove_meal(self):
-        meal = self.meal_combobox.get()
-        selected_food = self.food_combobox.get()
+        try:
+            # Get selected row from the TreeView
+            selected_item = self.tree.selection()[0]
+            values = self.tree.item(selected_item, 'values')
 
-        if meal and selected_food:
+            # Fetch the values
+            meal = values[0]
+            selected_food = values[1]
+
+            # Call the controller's remove method
             status, message = MealPlanController.remove(
                 patient_id=self.patient.id,
                 plan_id=self.plan_id,
-                meal=meal
+                meal=meal,
+                foods=selected_food
             )
 
             if status:
+                # Delete from TreeView
+                self.tree.delete(selected_item)
                 messagebox.showinfo("Remove Meal", "Meal plan removed successfully.")
-                self.refresh_table()
             else:
                 messagebox.showerror("Remove Error", f"Failed to remove meal: {message}")
-        else:
-            messagebox.showwarning("Warning", "Please select a meal and food to remove.")
+        except IndexError:
+            messagebox.showerror("Error", "No meal selected for removal.")
 
 
 if __name__ == "__main__":
